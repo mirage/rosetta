@@ -57,16 +57,6 @@ let decoder
   | #yuscii_encoding ->
      { src; pack = V (UTF_7, Yuscii.decoder src); }
 
-let decoder_line { pack = V (kind, decoder); _ } = match kind with
-  | UTF_7 -> Yuscii.decoder_line decoder
-  | ISO8859 -> Uuuu.decoder_line decoder
-  | KOI8 -> Coin.decoder_line decoder
-
-let decoder_column { pack = V (kind, decoder); _ } = match kind with
-  | UTF_7 -> Yuscii.decoder_column decoder
-  | ISO8859 -> Uuuu.decoder_column decoder
-  | KOI8 -> Coin.decoder_column decoder
-
 let decoder_byte_count { pack = V (kind, decoder); _ } = match kind with
   | UTF_7 -> Yuscii.decoder_byte_count decoder
   | ISO8859 -> Uuuu.decoder_byte_count decoder
@@ -78,3 +68,23 @@ let decoder_kind { pack = V (kind, decoder); _ } = match kind with
   | UTF_7 -> `UTF_7
   | ISO8859 -> (Uuuu.decoder_kind decoder :> encoding)
   | KOI8 -> (Coin.decoder_kind decoder :> encoding)
+
+module String = struct
+  type 'a folder = 'a -> int -> [ `Malformed of string | `Uchar of Uchar.t ] -> 'a
+
+  let fold kind ?off ?len folder acc str =
+    let off, len = match off, len with
+      | Some off, Some len -> off, len
+      | None, Some len -> 0, len
+      | Some off, None -> off, String.length str - off
+      | None, None -> 0, String.length str in
+    let acc = ref acc in
+    let decoder = decoder kind (`String (String.sub str off len)) in
+    let rec go decoder = match decode decoder with
+      | (`Uchar _ | `Malformed _) as res ->
+         acc := folder !acc (decoder_byte_count decoder) res
+        ; go decoder
+      | `End -> !acc
+      | `Await -> assert false in
+    go decoder
+end

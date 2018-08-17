@@ -42,14 +42,6 @@ val decode: encoding decoder -> decode
     {b Note.} Repeated invocation always eventually returns [`End], even
     in case of errors. *)
 
-val decoder_line: encoding decoder -> int
-(** [decoder_line d] is the line number of the last decoded (or malformed)
-   character. See {!decoder} for details. *)
-
-val decoder_column: encoding decoder -> int
-(** [decoder_column d] is the column number of the last decoder (or malformed)
-   character. See {!decoder} for details. *)
-
 val decoder_byte_count: encoding decoder -> int
 (** [decoder_byte_count d] is the number of characters already decoder on [d]
    (including malformed ones). This is the last {!decode}'s and byte offset
@@ -60,3 +52,16 @@ val decoder_src: encoding decoder -> src
 
 val decoder_kind: encoding decoder -> encoding
 (** [decoder_kind d] is [d]'s the decoded encoding scheme of [d]. *)
+
+module String: sig
+  type 'a folder = 'a -> int -> [ `Malformed of string | `Uchar of Uchar.t ] -> 'a
+  (** The type for character folder. The integer is the index in the string
+     where the [`Uchar] or [`Malformed] starts. *)
+
+  val fold: encoding -> ?off:int -> ?len:int -> 'a folder -> 'a -> string -> 'a
+  (** [fold e ?off ?len f a s] is [f (] ... [(f (f a pos u]{_0}[) j]{_1}[
+     u]{_1}[)] ... [)] ... [) j]{_n}[ u]{_n} where [u]{_i}, [j]{_i} are
+     characters and their start position in the [e] encoded substring [s]
+     starting at [pos] and [len] long. The default value for [pos] is [0] and
+     [len] is [ String.length s - pos]. *)
+end
