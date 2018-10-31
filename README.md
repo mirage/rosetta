@@ -1,4 +1,4 @@
-Rosetta - universal decoder of an encoding to Unicode
+Rosetta - universal decoder of an encoded flow to Unicode
 -----------------------------------------------------
 
 Rosetta is a merge-point between [uuuu](https://github.com/dinosaure/uuuu),
