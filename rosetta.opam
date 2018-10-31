@@ -1,21 +1,22 @@
-opam-version: "1.2"
+opam-version: "2.0"
 name:         "rosetta"
 maintainer:   "Romain Calascibetta <romain.calascibetta@gmail.com>"
 authors:      "Romain Calascibetta <romain.calascibetta@gmail.com>"
 homepage:     "https://github.com/dinosaure/rosetta"
 bug-reports:  "https://github.com/dinosaure/rosetta/issues"
-dev-repo:     "https://github.com/dinosaure/rosetta.git"
+dev-repo:     "git+https://github.com/dinosaure/rosetta.git"
 doc:          "https://dinosaure.github.io/rosetta/"
 license:      "MIT"
+synopsis:     "Universal mapper to Unicode"
 
 build: [
-  ["jbuilder" "subst" "-n" name] {pinned}
-  ["jbuilder" "build" "-p" name "-j" jobs]
+  ["dune" "subst"]
+  ["dune" "build" "-p" name "-j" jobs]
 ]
-build-test: [["jbuilder" "runtest" "-p" name "-j" jobs]]
 
 depends: [
-  "jbuilder" {build}
+  "ocaml" {>= "4.03.0"}
+  "dune" {build}
   "fmt"
   "bos"
   "uutf"
@@ -24,5 +25,3 @@ depends: [
   "uuuu"
   "yuscii"
 ]
-
-available: [ocaml-version >= "4.03.0"]
