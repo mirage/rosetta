@@ -21,7 +21,7 @@ depends: [
   "bos"
   "uutf"
   "cmdliner"
-  "coin"
-  "uuuu"
-  "yuscii"
+  "coin" {>= "0.1.1"}
+  "uuuu" {>= "0.1.1"}
+  "yuscii" {>= "0.2.1"}
 ]
