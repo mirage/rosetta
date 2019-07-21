@@ -21,7 +21,7 @@ to transform a latin1 flow to UTF-8:
 
 ```ocaml
 let trans ic oc =
-  let decoder = Rosetta.decoder (encoding_of_string "latin1") (`Channel ic) in
+  let decoder = Rosetta.decoder (Rosetta.encoding_of_string "latin1") (`Channel ic) in
   let encoder = Uutf.encoder `UTF_8 (`Channel oc) in
   let rec go () = match Rosetta.decode decoder with
     | `Await -> assert false (* XXX(dinosaure): impossible when you use `String of `Channel as source. *)
