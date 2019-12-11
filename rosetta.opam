@@ -8,6 +8,7 @@ dev-repo:     "git+https://github.com/dinosaure/rosetta.git"
 doc:          "https://dinosaure.github.io/rosetta/"
 license:      "MIT"
 synopsis:     "Universal mapper to Unicode"
+description:  "Universal mapper to Unicode (ISO-8859, KOI8, UTF-7)"
 
 build: [
   ["dune" "subst"]
@@ -16,7 +17,7 @@ build: [
 
 depends: [
   "ocaml" {>= "4.03.0"}
-  "dune" {build}
+  "dune"
   "fmt"
   "bos"
   "uutf"
