@@ -1,3 +1,10 @@
+v0.3.0 2020-03-14 Paris (France)
+------------------------------
+
+* Clean the distribution to have fewer dependencies
+* `dune` is not a build dependency anymore
+* Update OPAM file with lastest versions of `yuscii`, `coin` and `uuuu`
+
 v0.2.0 2019-12-11 Paris (France)
 ------------------------------
 
