@@ -31,7 +31,7 @@ type ('kind, 'decoder) tag =
   | KOI8 : ([> Coin.encoding], 'kind Coin.decoder) tag
 
 type 'kind pack =
-  | V : ('kind, 'decoder) tag * 'decoder -> 'kind pack [@unboxed]
+  | V : ('kind, 'decoder) tag * 'decoder -> 'kind pack
 
 type src = [`Channel of in_channel | `String of string | `Manual]
 
@@ -73,6 +73,24 @@ let decoder_kind {pack= V (kind, decoder); _} =
   | UTF_7 -> `UTF_7
   | ISO8859 -> (Uuuu.decoder_kind decoder :> encoding)
   | KOI8 -> (Coin.decoder_kind decoder :> encoding)
+
+let to_utf_8_string ?(rep= Uchar.rep) ~charset ?(off= 0) ?len str =
+  let len = match len with
+    | Some len -> len
+    | None -> String.length str - off in
+  match String.lowercase_ascii charset with
+  | "utf-8" -> Some (String.sub str off len)
+  | _ ->
+    let ( let* ) = Option.bind in
+    let* encoding = try Some (encoding_of_string charset) with _ -> None in
+    let decoder = decoder encoding (`String (String.sub str off len)) in
+    let buf = Buffer.create 0x7ff in
+    let rec go decoder = match decode decoder with
+      | `Uchar uchr -> Buffer.add_utf_8_uchar buf uchr; go decoder
+      | `End -> Some (Buffer.contents buf)
+      | `Malformed _ -> Buffer.add_utf_8_uchar buf rep; go decoder
+      | `Await -> assert false in
+    go decoder
 
 module String = struct
   type 'a folder =
