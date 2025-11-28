@@ -20,3 +20,4 @@ depends: [
   "uuuu" {>= "0.2.0"}
   "yuscii" {>= "0.3.0"}
 ]
+x-maintenance-intent: [ "(latest)" ]
