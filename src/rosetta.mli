@@ -2,7 +2,7 @@ type encoding = [ `UTF_7 | Uuuu.encoding | Coin.encoding ]
 (** The type of encoding. *)
 
 val encoding_of_string: string -> encoding
-(** [encoding_of_string s] converts a (case insensitive)
+(** [encoding_of_string s] converts a (case sensitive)
    {{:http://www.iana.org/assignments/character-sets}IANA character set name} to
    an encoding. *)
 
@@ -52,6 +52,11 @@ val decoder_src: encoding decoder -> src
 
 val decoder_kind: encoding decoder -> encoding
 (** [decoder_kind d] is [d]'s the decoded encoding scheme of [d]. *)
+
+val to_utf_8_string : ?rep:Uchar.t -> charset:string -> ?off:int -> ?len:int -> string -> string option
+(** [to_utf_8_string ~charset str] converts a given string [str] encoded with
+    the character set [charset] into a string in UTF-8. If the character set is
+    not recognised (among {!type:Rosetta.encoding}), it returns [None]. *)
 
 module String: sig
   type 'a folder = 'a -> int -> [ `Malformed of string | `Uchar of Uchar.t ] -> 'a
