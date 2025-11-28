@@ -38,20 +38,7 @@ let () = trans stdin stdout
 `rosetta` follows aliases availables into IANA character sets database:
 https://www.iana.org/assignments/character-sets.xhtml
 
-Others aliases will raise an exception. This function is case-insensitive.
-
-### About translation tables
-
-`rosetta` relies on underlying libraries such as `uuuu` or `coin`. They
-integrate translation tables provided by Unicode consortium. They should not be
-updated - so we statically save them into an `int array`.
-
-### About encoding
-
-`rosetta` supports only decoding to Unicode code-point. A support of encoding is
-not on our plan where people should only use Unicode now. Deal with many
-encodings is a pain and we should only produce something according to Unicode
-than old encoding like latin1.
+Others aliases will raise an exception. This function is case-sensitive.
 
 [uuuu]: https://github.com/mirage/uuuu.git
 [yuscii]: https://github.com/mirage/yuscii.git
